@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 
-link = 'https://www.psychologytoday.com/us/therapists?search='
+link = 'https://www.psychologytoday.com/us/therapists?search=11366'
 
 req = Request(link, headers={'User-Agent': 'Mozilla/5.0'})
 page = urlopen(req)
