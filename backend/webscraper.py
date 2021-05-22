@@ -1,11 +1,11 @@
 import requests
-import secrets
+import secret_token
 
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 from therapist_model import Therapist
 
-link = 'https://www.psychologytoday.com/us/therapists?search=11366'
+link = 'https://www.psychologytoday.com/us/therapists?search=11367'
 
 def scrape_therapists(url):
     # scraping all the therapists from website
@@ -54,7 +54,7 @@ def scrape_therapists(url):
         coordinates = []
         format_address = address.replace(" ", "+").replace(",", "")   
         
-        url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + format_address + "&key=" + secrets.MAPS_API_KEY
+        url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + format_address + "&key=" + secret_token.MAPS_API_KEY
         r = requests.get(url)
         results = r.json()['results']
         location = results[0]['geometry']['location']

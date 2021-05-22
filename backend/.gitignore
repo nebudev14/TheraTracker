@@ -142,4 +142,4 @@ serviceAccountKey.json
 .vscode
 app.yaml
 development.session.sql
-secrets.py
+secret_token.py
