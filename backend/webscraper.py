@@ -1,3 +1,6 @@
+import requests
+import secrets
+
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 from therapist_model import Therapist
@@ -46,8 +49,18 @@ def scrape_therapists(url):
         postal_code = page_soup.find('span', attrs={'itemprop':'postalcode'})
         num +=1    
         address += street.text.strip() + " " + locality.text.strip() + " " + region.text.strip() + " " + postal_code.text.strip()
-        
-        final_therapist = Therapist(name.strip(), phone.strip(), address, urls)
-        therapists.append(final_therapist)
-    return therapists
 
+        # getting the coordinates of address
+        coordinates = []
+        format_address = address.replace(" ", "+").replace(",", "")   
+        
+        url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + format_address + "&key=" + secrets.MAPS_API_KEY
+        r = requests.get(url)
+        results = r.json()['results']
+        location = results[0]['geometry']['location']
+        coordinates.append(location["lat"])
+        coordinates.append(location["lng"])
+        final_therapist = Therapist(name.strip(), phone.strip(), address, urls, coordinates)
+        therapists.append(final_therapist)
+        
+    return therapists

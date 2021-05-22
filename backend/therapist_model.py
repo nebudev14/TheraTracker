@@ -12,8 +12,9 @@ class Therapist:
     url : str
         Link to the therapist's profile which contains more information about their services
     """
-    def __init__(self, name, phone, address, url):
+    def __init__(self, name, phone, address, url, coords):
         self.name = name
         self.phone = phone 
         self.address = address
         self.url = url
+        self.coords = coords
