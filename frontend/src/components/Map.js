@@ -1,9 +1,9 @@
 import React from 'react';
-import { GoogleMap, withScriptjs, withGoogleMap } from 'react-google-maps';
+import { GoogleMap } from 'react-google-maps';
 
 function Map() {
     return(
-        <GoogleMap defaultZoom={10} defaultCenter={{lat: 27.2046, lng:-77.4977}} />
+        <GoogleMap defaultZoom={10} defaultCenter={{lat: 40.2046, lng:-77.4977}} />
     );
 }
 
