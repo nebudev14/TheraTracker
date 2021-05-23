@@ -1,7 +1,7 @@
 import React from 'react';
-import { GoogleMap, LoadScript } from 'react-google-maps';
+import { GoogleMap, Marker } from 'react-google-maps';
 import axios from 'axios';
-import { render } from 'react-dom';
+
 
 const containerStyle = {
     width: "400px",
@@ -13,39 +13,48 @@ export default class Map extends React.Component {
     constructor(props) {
       super(props);
 
+      this.setTherapist = this.setTherapist.bind(this);
+      this.setPsychiatrist = this.setPsychiatrist.bind(this);
+
       this.state = {
         lat: 42.331429,
         lng: -83.045753,
         therapistList: [],
         psychiatristList: []
       }
-
     }
 
     componentDidMount() {
+
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
           this.setState({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
+          axios.get('http://127.0.0.1:5000/therapist/' + this.state.lat.toString() + '/' + this.state.lng.toString())
+          .then(response => {
+            this.setTherapist(response['data']);
+          });
+    
+          axios.get('http://127.0.0.1:5000/psychiatrist/' + this.state.lat.toString() + '/' + this.state.lng.toString())
+          .then(response => {
+            this.setPsychiatrist(response['data']);
+          });
         });
       }
+    }
 
-      axios.get('http://127.0.0.1:5000/therapist/' + this.state.lat.toString() + '/' + this.state.lng.toString())
-      .then(response => {
-        this.setState({
-          therapistList: response
-        });
+    setTherapist(content) {
+      this.setState({
+        therapistList: content
       });
+    }
 
-      axios.get('http://127.0.0.1:5000/psychiatrist/' + this.state.lat.toString() + '/' + this.state.lng.toString())
-      .then(response => {
-        this.setState({
-          psychiatristList: response
-        });
+    setPsychiatrist(content) {
+      this.setState({
+        psychiatristList: content
       });
-
     }
 
   render() {   
@@ -54,9 +63,24 @@ export default class Map extends React.Component {
           mapContainerStyle={containerStyle}
           center={{ lat: this.state.lat, lng: this.state.lng }}
           zoom={10}
-        >
-          {/* Child components, such as markers, info windows, etc. */}
-          <></>
+        > 
+        {
+        this.state.therapistList.map(therapist => (
+          <Marker 
+              key={therapist.id}
+              position={{lat: therapist.coords[0], lng: therapist.coords[1]}}
+          />
+        )) 
+        }
+        {
+          this.state.psychiatristList.map(psychiatrist => (
+            <Marker 
+            key={psychiatrist.id}
+                position={{lat: psychiatrist.coords[0], lng: psychiatrist.coords[1]}}
+            />
+          )) 
+          }
+            
         </GoogleMap>
     );
   }
