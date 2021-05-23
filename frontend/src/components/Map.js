@@ -107,6 +107,8 @@ export default class Map extends React.Component {
             <div>
               <p>{this.state.currentDoctor.name}</p>
               <p>{this.state.currentDoctor.address}</p>
+              <p>Rating: {this.state.currentDoctor.rating}</p>
+              <p>Number of Ratings: {this.state.currentDoctor.numRatings}</p>
             </div>
             </InfoWindow>
           )
