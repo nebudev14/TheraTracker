@@ -1,10 +1,11 @@
-from typing import final
 import requests
 import secret_token
 from flask import Flask, jsonify, request 
+from flask_cors import CORS
 from webscraper import scrape_therapists
 
 app = Flask(__name__)
+
 
 @app.route("/locations/<lat>/<lng>", methods=['GET'])
 def get_location(lat, lng):
