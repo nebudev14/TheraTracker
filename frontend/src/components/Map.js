@@ -1,5 +1,5 @@
 import React from 'react';
-import { GoogleMap, Marker } from 'react-google-maps';
+import { GoogleMap, Marker, InfoWindow } from 'react-google-maps';
 import axios from 'axios';
 
 
@@ -15,12 +15,14 @@ export default class Map extends React.Component {
 
       this.setTherapist = this.setTherapist.bind(this);
       this.setPsychiatrist = this.setPsychiatrist.bind(this);
+      this.setCurrentDoctor = this.setCurrentDoctor.bind(this);
 
       this.state = {
         lat: 42.331429,
         lng: -83.045753,
         therapistList: [],
-        psychiatristList: []
+        psychiatristList: [],
+        currentDoctor: null
       }
     }
 
@@ -57,6 +59,12 @@ export default class Map extends React.Component {
       });
     }
 
+    setCurrentDoctor(content) {
+      this.setState({
+        currentDoctor: content
+      });
+    }
+
   render() {   
     return (
         <GoogleMap
@@ -69,18 +77,40 @@ export default class Map extends React.Component {
           <Marker 
               key={therapist.id}
               position={{lat: therapist.coords[0], lng: therapist.coords[1]}}
+              onClick={() => {
+                this.setCurrentDoctor(therapist);
+                console.log(this.state.currentDoctor)
+              }}
           />
         )) 
         }
         {
           this.state.psychiatristList.map(psychiatrist => (
             <Marker 
-            key={psychiatrist.id}
+                key={psychiatrist.id}
                 position={{lat: psychiatrist.coords[0], lng: psychiatrist.coords[1]}}
+                onClick={() => {
+                  this.setCurrentDoctor(psychiatrist);
+                  console.log(this.state.currentDoctor)
+                }}
             />
           )) 
-          }
-            
+        }
+        {
+          this.state.currentDoctor && (
+            <InfoWindow
+            position={{lat: this.state.currentDoctor.coords[0], lng: this.state.currentDoctor.coords[1]}}
+            onCloseClick={() => {
+              this.setCurrentDoctor(null)
+            }}
+            >
+            <div>
+              <p>{this.state.currentDoctor.name}</p>
+              <p>{this.state.currentDoctor.address}</p>
+            </div>
+            </InfoWindow>
+          )
+        }
         </GoogleMap>
     );
   }
