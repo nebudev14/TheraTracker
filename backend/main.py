@@ -5,6 +5,8 @@ from flask_cors import CORS
 from webscraper import get_therapist, get_psychiatrist
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route("/therapist/<lat>/<lng>", methods=['GET'])
 def therapist(lat, lng):
@@ -12,7 +14,6 @@ def therapist(lat, lng):
 
 @app.route("/psychiatrist/<lat>/<lng>", methods=['GET'])
 def psychiatrist(lat, lng):
-    final_result = []
     return jsonify(get_psychiatrist(lat, lng))
 
 if __name__ == '__main__':
