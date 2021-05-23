@@ -9,8 +9,12 @@ const containerStyle = {
 
 export default function Map() {
     const [currentLoc, setCurrentLoc] = React.useState({
-        lat: 42.331429,
-        lng: -83.045753
+      lat: 42.331429,
+      lng: -83.045753
+    })
+
+    const [therapists, addTherapists] = React.useState({
+      therapistList: []
     })
 
     if (navigator.geolocation) {
@@ -21,7 +25,13 @@ export default function Map() {
           });
         });
       }
-      
+    axios.get('http://127.0.0.1:5000/therapist/' + currentLoc.lat.toString() + '/' + currentLoc.lng.toString())
+      .then(response => {
+        addTherapists({
+          therapistList: response
+        });
+      });
+
   return (
       <GoogleMap
         mapContainerStyle={containerStyle}
