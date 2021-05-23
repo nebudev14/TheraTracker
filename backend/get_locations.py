@@ -7,10 +7,11 @@ def get_therapist(lat, lng):
     places = []
     r = requests.get(link)
     results = r.json()['results']
+    id = 1
     for i in results:
         name = i['name']
         address = i['vicinity']
-        coords = [i['geometry']['location']['lat'], i['geometry']['location']['lat']]
+        coords = [i['geometry']['location']['lat'], i['geometry']['location']['lng']]
         rating = i['rating']
         numRatings = i['user_ratings_total']
         
@@ -19,9 +20,11 @@ def get_therapist(lat, lng):
             'address': address,
             'coords': coords,
             'rating': rating,
-            'numRatings': numRatings
+            'numRatings': numRatings,
+            'id': id
         }
         places.append(entry)
+        id += 1
     return places
 
 # getting all psychiatrists 
@@ -33,7 +36,7 @@ def get_psychiatrist(lat, lng):
     for i in results:
         name = i['name']
         address = i['vicinity']
-        coords = [i['geometry']['location']['lat'], i['geometry']['location']['lat']]
+        coords = [i['geometry']['location']['lat'], i['geometry']['location']['lng']]
         rating = i['rating']
         numRatings = i['user_ratings_total']
         

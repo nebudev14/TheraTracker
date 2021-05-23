@@ -2,7 +2,7 @@ import requests
 import secret_token
 from flask import Flask, jsonify
 from flask_cors import CORS
-from webscraper import get_therapist, get_psychiatrist
+from get_locations import get_therapist, get_psychiatrist
 
 app = Flask(__name__)
 cors = CORS(app)
