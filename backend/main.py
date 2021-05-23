@@ -1,31 +1,19 @@
 import requests
 import secret_token
-from flask import Flask, jsonify, request 
+from flask import Flask, jsonify
 from flask_cors import CORS
-from webscraper import scrape_therapists
+from webscraper import get_therapist, get_psychiatrist
 
 app = Flask(__name__)
 
+@app.route("/therapist/<lat>/<lng>", methods=['GET'])
+def therapist(lat, lng):
+    return jsonify(get_therapist(lat, lng))
 
-@app.route("/locations/<lat>/<lng>", methods=['GET'])
-def get_location(lat, lng):
+@app.route("/psychiatrist/<lat>/<lng>", methods=['GET'])
+def psychiatrist(lat, lng):
     final_result = []
-    url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&key={}'.format(lat, lng, secret_token.MAPS_API_KEY)
-    r = requests.get(url)
-    results = r.json()['results']
-    postal_code = results[0]['address_components'][-1]['short_name']
-    link = "https://www.psychologytoday.com/us/therapists?search=" + postal_code
-    all_therapists = scrape_therapists(link)
-    for i in all_therapists:
-        therapist_info = {
-            'name': i.name,
-            'phone': i.phone,
-            'address': i.address,
-            'url': i.url,
-            'coordinates': i.coords
-        }
-        final_result.append(therapist_info)
-    return jsonify(final_result)
+    return jsonify(get_psychiatrist(lat, lng))
 
 if __name__ == '__main__':
     app.run(debug=True)
